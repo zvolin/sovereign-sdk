@@ -115,6 +115,15 @@ where
                 prover_address: self.prover_address.clone(),
             };
 
+            use std::io::Write;
+            let mut file = std::fs::File::options()
+                .append(true)
+                .open("witness-data")
+                .unwrap();
+            write!(&mut file, "{}", data.stf_witness.da_block_header.height());
+            serde_json::to_writer(&file, &data).unwrap();
+            write!(&mut file, "\n\n");
+
             let prover_address = self.prover_address.clone();
 
             inner_vm.add_hint(&data);
